@@ -1,7 +1,0 @@
-{
-    "scripts": {
-        "build": "npm --prefix client ci && npm --prefix client run build && npm --prefix functions install",
-        "dev": "netlify dev",
-        "start": "netlify dev"
-    }
-}
