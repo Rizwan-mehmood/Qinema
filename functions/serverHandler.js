@@ -15,7 +15,7 @@ connectDB();
 
 app.use(express.json());
 app.use(cors());
-app.use(`${basePath}/api/inngest`, serve({ client: inngest, functions }));
+app.use(`${basePath}/inngest`, serve({ client: inngest, functions }));
 app.use(clerkMiddleware());
 
 
