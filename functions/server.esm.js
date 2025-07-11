@@ -9,7 +9,7 @@ import ServerlessHttp from "serverless-http";
 
 const app = express();
 
-await connectDB();
+connectDB();
 
 app.use(express.json());
 app.use(cors());
