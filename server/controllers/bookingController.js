@@ -1,3 +1,4 @@
+import { inngest } from "../inngest/index.js";
 import Booking from "../models/Booking.js";
 import Show from "../models/Show.js";
 import stripe from "stripe";
@@ -80,6 +81,13 @@ export const createBooking = async (req, res) => {
 
         await booking.save()
 
+        await inngest.send({
+            name: "app/checkpayment",
+            data: {
+                bookingId: booking._id.toString(),
+            }
+        })
+
         res.json({ success: true, url: session.url })
     } catch (error) {
         console.error(error);
@@ -90,35 +98,13 @@ export const createBooking = async (req, res) => {
 export const getOccupiedSeats = async (req, res) => {
     try {
         const { showId } = req.params;
+        const showData = await Show.findById(showId);
 
-        const paidBookings = await Booking.find({
-            show: showId,
-            isPaid: true
-        });
+        const occupiedSeats = Object.keys(showData.occupiedSeats);
 
-        let occupiedSeats = [];
-        paidBookings.forEach(booking => {
-            occupiedSeats.push(...booking.bookedSeats);
-        });
-
-        res.json({ success: true, occupiedSeats });
+        res.json({ success: true, occupiedSeats })
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: error.message });
+        res.json({ success: false, message: error.message })
     }
 }
-
-export const deleteExpiredUnpaidBookings = async () => {
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-
-    try {
-        const result = await Booking.deleteMany({
-            isPaid: false,
-            createdAt: { $lt: oneHourAgo }
-        });
-
-        console.log(`[CLEANUP] Deleted ${result.deletedCount} expired unpaid bookings.`);
-    } catch (error) {
-        console.error('[CLEANUP ERROR]', error.message);
-    }
-};
