@@ -27,8 +27,6 @@ const Navbar = () => {
 
                 <Link className='hover:text-primary transition-all duration-300' onClick={() => { scrollTo(0, 0); setIsOpen(false) }} to="/">Home</Link>
                 <Link className='hover:text-primary transition-all duration-300' onClick={() => { scrollTo(0, 0); setIsOpen(false) }} to="/movies">Movies</Link>
-                <Link className='hover:text-primary transition-all duration-300' onClick={() => { scrollTo(0, 0); setIsOpen(false) }} to="/">Theaters</Link>
-                <Link className='hover:text-primary transition-all duration-300' onClick={() => { scrollTo(0, 0); setIsOpen(false) }} to="/">Releases</Link>
                 {favoriteMovies.length > 0 && <Link className='hover:text-primary transition-all duration-300' onClick={() => { scrollTo(0, 0); setIsOpen(false) }} to="/favorites">Favorites</Link>}
             </div>
 
