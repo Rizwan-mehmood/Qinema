@@ -1,18 +1,20 @@
 // pages/Movies.jsx
 import React, { useState } from 'react'
-import { dummyShowsData } from '../assets/assets'
 import MovieCard from '../components/MovieCard'
 import BlurCircle from '../components/BlurCircle'
 import { Frown } from 'lucide-react'
 import Pagination from '../components/Pagination'
+import { useAppContext } from '../context/AppContext'
 
 const Movies = () => {
+
+    const { shows } = useAppContext()
     const itemsPerPage = 9
-    const totalPages = Math.ceil(dummyShowsData.length / itemsPerPage)
+    const totalPages = Math.ceil(shows.length / itemsPerPage)
 
     const [currentPage, setCurrentPage] = useState(1)
     const startIdx = (currentPage - 1) * itemsPerPage
-    const currentItems = dummyShowsData.slice(startIdx, startIdx + itemsPerPage)
+    const currentItems = shows.slice(startIdx, startIdx + itemsPerPage)
 
     const handlePageChange = (page) => {
         if (page < 1 || page > totalPages) return
@@ -20,7 +22,7 @@ const Movies = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
-    if (dummyShowsData.length === 0) {
+    if (shows.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center gap-3 h-screen">
                 <Frown className="w-15 md:w-30 h-15 md:h-30" />

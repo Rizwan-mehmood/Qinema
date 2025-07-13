@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { ArrowRight } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
 import BlurCircle from './BlurCircle';
-import { dummyShowsData } from '../assets/assets';
 import MovieCard from './MovieCard';
+import { useAppContext } from '../context/AppContext';
 
 const FeauturedSection = () => {
     const navigate = useNavigate();
+    const { shows } = useAppContext()
     const [count, setCount] = useState(6);
     return (
         <div className='px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden'>
@@ -19,14 +20,14 @@ const FeauturedSection = () => {
                 </button>
             </div>
             <div className='flex flex-wrap justify-center mx-auto max-w-4xl max-w-[857px] justify-center md:justify-start gap-8 mt-8'>
-                {dummyShowsData.slice(0, count).map((movie, index) => (
+                {shows.slice(0, count).map((movie, index) => (
                     <MovieCard key={`movie-${index}`} movie={movie} />
                 ))}
             </div>
             {
-                count < dummyShowsData.length && count < 24 ? (
+                count < shows.length && count < 24 ? (
                     <div className='flex justify-center mt-20'>
-                        <button onClick={() => { setCount(count + 6); console.log(count, dummyShowsData.length) }} className='px-10 py-3 text-sm bg-primary hover:bg-primary-dull transistion rounded-md font-medium cursor-pointer'>Show More</button>
+                        <button onClick={() => { setCount(count + 6); console.log(count, shows.length) }} className='px-10 py-3 text-sm bg-primary hover:bg-primary-dull transistion rounded-md font-medium cursor-pointer'>Show More</button>
                     </div>
                 ) : <div className='mt-30' />
             }

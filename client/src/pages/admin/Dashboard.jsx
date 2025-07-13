@@ -5,8 +5,11 @@ import { dummyDashboardData } from '../../assets/assets';
 import Title from '../../components/admin/Title';
 import BlurCircle from '../../components/BlurCircle';
 import { dateFormat } from '../../lib/dateformat';
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
+    const { axios, getToken, user, image_base_url } = useAppContext()
     const curreny = import.meta.env.VITE_CURRENCY
 
     const [dashboardData, setDashboardData] = useState(
@@ -28,13 +31,28 @@ const Dashboard = () => {
     ]
 
     const fetchDashboardData = async () => {
-        setDashboardData(dummyDashboardData)
-        setIsLoading(false)
+        try {
+            const { data } = await axios.get("/api/admin/dashboard", {
+                headers: { Authorization: `Bearer ${await getToken()}` }
+            })
+
+            if (data.success) {
+                setDashboardData(data.dashboardData)
+                setIsLoading(false)
+            }
+            else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error("Error fetching dashboard data", error)
+        }
     }
 
     useEffect(() => {
-        fetchDashboardData();
-    }, [])
+        if (user) {
+            fetchDashboardData();
+        }
+    }, [user])
 
 
     if (isLoading) return <Loader />
@@ -66,7 +84,7 @@ const Dashboard = () => {
                 <BlurCircle top='100px' left='-10%' />
                 {dashboardData.activeShows.map((show, index) => (
                     <div key={index} className='w-55 rounded-lg overflow-hidden h-full pb-3 bg-primary/10 border border-primary/20 hover:-translate-y-1 transition duration-300'>
-                        <img src={show.movie.poster_path} className='h-60 w-full object-cover' alt="" />
+                        <img src={image_base_url + show.movie.poster_path} className='h-60 w-full object-cover' alt="" />
                         <p className='font-medium p-2 truncate'>{show.movie.title}</p>
                         <div className='flex items-center justify-between px-2'>
                             <p className='text-lg font-medium'>

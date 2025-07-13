@@ -10,12 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.10.0",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
     "react-player": "^3.1.0",
-    "react-router-dom": "^7.6.3"
+    "react-router-dom": "^7.6.3",
   },
   "devDependencies": {
     "@clerk/clerk-react": "^5.33.0",

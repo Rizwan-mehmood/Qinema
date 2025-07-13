@@ -3,33 +3,38 @@ import { dummyShowsData } from '../../assets/assets'
 import Loader from '../../components/Loader'
 import Title from '../../components/admin/Title'
 import { dateFormat } from '../../lib/dateformat'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const ListShows = () => {
+    const { axios, getToken, user } = useAppContext()
     const currency = import.meta.env.VITE_CURRENCY
     const [shows, setShows] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
     const getAllShows = async () => {
         try {
-            setShows([{
-                movie: dummyShowsData[0],
-                showDateTime: "2025-07-10T09:55:00.000Z",
-                showPrice: 59,
-                occupiedSeats: {
-                    A1: "user_1",
-                    B1: "user_2",
-                    C1: "user_3"
-                }
-            }]);
+            const { data } = await axios.get("/api/admin/all-shows", {
+                headers: { Authorization: `Bearer ${await getToken()}` }
+            })
+
+            if (data.success) {
+                setShows(data.shows)
+            }
+            else {
+                toast.error(data.message)
+            }
             setIsLoading(false);
         } catch (error) {
-            console.error(error)
+            toast.error("Error fetchings shows data", error)
         }
     }
 
     useEffect(() => {
-        getAllShows();
-    }, []);
+        if (user) {
+            getAllShows();
+        }
+    }, [user]);
 
     if (isLoading) return <Loader />
 
